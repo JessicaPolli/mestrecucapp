@@ -17,14 +17,13 @@ class _ReceitaState extends State<Receita> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pink,
         centerTitle: true,
-        title: Text("Nome da receita", style: TextStyle(color: Colors.white),),
+        title: Text("Nome da receita",),
       ),
       backgroundColor: Colors.white,
       body: Container(
         padding: EdgeInsets.all(5),
-        
+
         child:  Column(
 
           mainAxisAlignment: MainAxisAlignment.start,

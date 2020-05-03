@@ -1,5 +1,13 @@
 
 import 'package:flutter/material.dart';
+import 'package:mestrecucapp/HomePage.dart';
+import 'package:mestrecucapp/RegisterPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 class LoginPage extends StatefulWidget {
 
@@ -9,27 +17,27 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TextStyle style = TextStyle(fontSize: 20, color: Colors.white);
-  String _usuario="";
-  String _senha="";
+  //String _usuario="";
+  //String _senha="";
   final frmLoginKey = GlobalKey<FormState>();
-
-  void _validarLogin(){
-    final form =frmLoginKey.currentState;
-    if(form.validate()){
-      form.save();
-      if(_usuario=="teste12" && _senha=="teste12" ){
-        Navigator.of(context).pushNamedAndRemoveUntil( "/HomePage", (route) => false);
-      }else{
-        showDialog(
-            context: context,
-            builder: (context){
-              return AlertDialog(
-                title: Text("Erro Login"),
-                content: Text("Usuário e/ou senha inválidos!"),
-              );
-            }
-        );
-      }
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _success;
+  String _userEmail;
+  String _userID;
+  void _signInWithEmailAndPassword() async{
+    final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
+    email: _emailController.text,
+    password: _passwordController.text,
+    )).user;
+    if (user != null) {
+      setState(() {
+        _success = true;
+        _userEmail = user.email;
+      });
+      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage(user: user)));
+    } else {
+    _success = false;
     }
   }
   @override
@@ -37,28 +45,30 @@ class _LoginPageState extends State<LoginPage> {
     final usuarioField= TextFormField(
       obscureText: false,
       style: style,
-      onSaved: (valor){
-        _usuario = valor;
-      },
-      validator: (valor){
-        return valor.length<6? "Usuário deve ter no mínimo 6 caracteres": null;
+      controller: _emailController,
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Infomre um email  válido';
+        }
+        return null;
       },
       decoration: InputDecoration(
         contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-        labelText:  'Usuário',
+        labelText:  'Email',
         labelStyle: TextStyle(fontSize: 16),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32), ),
         enabledBorder:  OutlineInputBorder(borderSide: BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(32), ),
       ),
     );
     final senhaField= TextFormField(
+      controller: _passwordController,
       obscureText: true,
       style: style,
-      onSaved: (valor){
-        _senha = valor;
-      },
-      validator: (valor){
-        return valor.length<6? "Senha deve ter no minimo 6 caracteres": null;
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Informe a senha';
+        }
+        return null;
       },
       decoration: InputDecoration(
         fillColor: Colors.white,
@@ -73,6 +83,7 @@ class _LoginPageState extends State<LoginPage> {
         body: SingleChildScrollView(
           child: Center(
               child: Container(
+
                 height: MediaQuery.of(context).size.height,
                 color: Colors.black,
                 child: Padding(
@@ -111,9 +122,26 @@ class _LoginPageState extends State<LoginPage> {
                                 side: BorderSide(color: Colors.blue)
                             ),
                             elevation: 7.0,
-                            onPressed: (){
-                              _validarLogin();
+                            onPressed: () async{
+                              if (frmLoginKey.currentState.validate()) {
+                                _signInWithEmailAndPassword();
+                              }
                             },
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              _success == null
+                                  ? ''
+                                  : (_success
+                                  ? 'Successfully signed in ' + _userEmail
+                                  : 'Sign in failed'),
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                           SizedBox(
                             height: 15,
@@ -122,9 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: () => showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return AlertDialog(
-                                        content: Text('Acesso a tela de registro de usuários!')
-                                    );
+                                    return RegisterPage();
                                   }
                               ),
                               child: Text('Registre-se',

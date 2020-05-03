@@ -19,9 +19,8 @@ class _listaReceitasState extends State<listaReceitas> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pink,
         centerTitle: true,
-        title: Text(widget.lista, style: TextStyle(color: Colors.white),),
+        title: Text(widget.lista,),
       ),
       backgroundColor: Colors.white,
       body:  ListView(

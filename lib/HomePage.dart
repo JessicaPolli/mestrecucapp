@@ -1,27 +1,27 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mestrecucapp/ListaReceitasPage.dart';
 
-class HomePage extends StatelessWidget {
+
+class HomePage extends StatefulWidget {
+  final FirebaseUser user;
+  HomePage({
+    Key key,
+    @required this.user,
+  });
   @override
-  Widget build(BuildContext context) {
-    return Home();
-  }
+  _HomePageState createState() => _HomePageState();
 }
 
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
+class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = <Widget>[
     Inicio(),
-    Recentes(),
-    Favoritos(),
-    Receitas(),
+    listaReceitas(lista: "Recentes",),
+    listaReceitas(lista: "Favoritos",),
+    listaReceitas(lista: "Minhas receitas",),
   ];
 
   void _onItemTapped(int index) {
@@ -32,6 +32,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.user.email);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -43,7 +44,7 @@ class _HomeState extends State<Home> {
               UserAccountsDrawerHeader(
 
                 accountName: Text('Nome Usuário'),
-                accountEmail: Text('email_usuario@gmail.com'),
+                accountEmail: Text(widget.user.email),
                 currentAccountPicture: CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.transparent,
@@ -119,7 +120,6 @@ class Inicio extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   margin: EdgeInsets.only(left: 6, right: 3),
-                  height: MediaQuery.of(context).size.height*.36,
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
@@ -135,7 +135,6 @@ class Inicio extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100),
                 ),
                 margin: EdgeInsets.only(left: 6, right: 3),
-                height: MediaQuery.of(context).size.height*.36,
                 width: MediaQuery.of(context).size.width*.47,
                 child:InkWell(
                   onTap: (){
@@ -156,7 +155,6 @@ class Inicio extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   margin: EdgeInsets.only(left: 6, right: 3),
-                  height: MediaQuery.of(context).size.height*.36,
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
@@ -172,7 +170,6 @@ class Inicio extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   margin: EdgeInsets.only(left: 6, right: 3),
-                  height: MediaQuery.of(context).size.height*.25,
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
@@ -193,7 +190,6 @@ class Inicio extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   margin: EdgeInsets.only(left: 6, right: 3),
-                  height: MediaQuery.of(context).size.height*.36,
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
@@ -209,7 +205,6 @@ class Inicio extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   margin: EdgeInsets.only(left: 6, right: 3),
-                  height: MediaQuery.of(context).size.height*.36,
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
@@ -230,7 +225,6 @@ class Inicio extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   margin: EdgeInsets.only(left: 6,right: 3),
-                  height: MediaQuery.of(context).size.height*.36,
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
@@ -246,7 +240,6 @@ class Inicio extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   margin: EdgeInsets.only(left: 6, right: 3),
-                  height: MediaQuery.of(context).size.height*.36,
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
@@ -267,7 +260,6 @@ class Inicio extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   margin: EdgeInsets.only(left: 6, right: 3),
-                  height: MediaQuery.of(context).size.height*.36,
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
@@ -283,7 +275,6 @@ class Inicio extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   margin: EdgeInsets.only(left: 6, right: 3),
-                  height: MediaQuery.of(context).size.height*.36,
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
@@ -299,33 +290,6 @@ class Inicio extends StatelessWidget {
 
         ],
       ),
-    );
-  }
-}
-class Recentes extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text("Recentes")
-    );
-  }
-}
-
-class Favoritos extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text("Favoritos"),
-    );
-  }
-}
-
-
-class Receitas extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text("Minhas Receitas"),
     );
   }
 }
