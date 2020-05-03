@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mestrecucapp/ListaReceitasPage.dart';
+import 'package:mestrecucapp/LoginPage.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                   title: Text('Perfil'),
                   leading: Icon(Icons.person_pin),
-                  trailing: Icon(Icons.arrow_forward),
+                  trailing: Icon(Icons.navigate_next),
                   onTap: () {
                     debugPrint('Clicou no menu 1');
                   }
@@ -67,6 +68,14 @@ class _HomePageState extends State<HomePage> {
                     debugPrint('Clicou no menu 2');
                   }
                ),
+              ListTile(
+                title: Text("Sair"),
+                leading: Icon(Icons.exit_to_app),
+                trailing: Icon(Icons.navigate_next),
+                onTap: (){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                },
+              )
 
             ],
           )
