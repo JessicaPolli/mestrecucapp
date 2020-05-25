@@ -10,12 +10,10 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
-  firebase_database:
-  firebase_core:
-  mysql1:
   firebase_auth:
-  firebase_dynamic_links:
-  google_sign_in:
+  cloud_firestore:
+  image_picker:
+
 
 dev_dependencies:
   flutter_test:

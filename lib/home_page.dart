@@ -1,13 +1,13 @@
-
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mestrecucapp/ListaReceitasPage.dart';
-import 'package:mestrecucapp/LoginPage.dart';
-
+import 'package:mestrecucapp/lista_receitas_page.dart';
+import 'package:mestrecucapp/login_page.dart';
+import 'package:mestrecucapp/model/usuario.dart';
+import 'package:mestrecucapp/nova_receita.dart';
 
 class HomePage extends StatefulWidget {
-  final FirebaseUser user;
+  final Usuario user;
   HomePage({
     Key key,
     @required this.user,
@@ -17,6 +17,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  String title = 'Mestre Cuca App';
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = <Widget>[
     Inicio(),
@@ -33,23 +35,27 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var byte = null;
+    if(widget.user.foto!=null){
+      byte = base64.decode(widget.user.foto.toString());
+    }
     print(widget.user.email);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Mestre Cuca App')
+        title: Text(title),
       ),
       drawer: Drawer(
           child: ListView(
             children: <Widget>[
               UserAccountsDrawerHeader(
 
-                accountName: Text('Nome Usuário'),
-                accountEmail: Text(widget.user.email),
+                accountName: Text(widget.user.nome.toString()),
+                accountEmail: Text(widget.user.email.toString()),
                 currentAccountPicture: CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.transparent,
-                  backgroundImage: AssetImage('assets/images/usuario.jpg'),
+                  backgroundImage:byte==null?AssetImage('assets/images/usuario.jpg'):MemoryImage(byte),
                 ),
               ),
               ListTile(
@@ -81,11 +87,25 @@ class _HomePageState extends State<HomePage> {
           )
       ),
       body:_widgetOptions.elementAt(_selectedIndex),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add, color: Colors.white,),
+        onPressed: (){
+          print( DateTime.now());
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> NovaReceita(user: widget.user,)));
+        },
+        backgroundColor: Colors.pinkAccent,
+      ),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           onTap: (int index) => setState(() {
             setState(() {
               _selectedIndex = index;
+              switch(_selectedIndex){
+                case 0: title='Mestre Cuca App'; break;
+                case 1: title='Recentes'; break;
+                case 2: title='Favoritos'; break;
+                case 3: title='Minhas receitas'; break;
+              }
             });
           }),
           backgroundColor: Colors.black,
@@ -111,6 +131,7 @@ class _HomePageState extends State<HomePage> {
           ]
       ),
     );
+
   }
 }
 class Inicio extends StatelessWidget {
@@ -132,7 +153,7 @@ class Inicio extends StatelessWidget {
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Frituras",)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Frituras", retorno: 0,)));
                     },
                     child:  Image.asset(
                       "assets/images/fritas.jpg",
@@ -147,7 +168,7 @@ class Inicio extends StatelessWidget {
                 width: MediaQuery.of(context).size.width*.47,
                 child:InkWell(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Sobremesas",)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Sobremesas",retorno: 0,)));
                   },
                   child:  Image.asset(
                     "assets/images/sobremesa.jpg",
@@ -167,7 +188,7 @@ class Inicio extends StatelessWidget {
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Assados",)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Assados",retorno: 0,)));
                     },
                     child:  Image.asset(
                       "assets/images/assados.jpg",
@@ -182,7 +203,7 @@ class Inicio extends StatelessWidget {
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Bolos e tortas",)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Bolos e tortas",retorno: 0,)));
                     },
                     child:  Image.asset(
                       "assets/images/bolo.jpg",
@@ -202,7 +223,7 @@ class Inicio extends StatelessWidget {
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Bebidas cafeínadas",)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Bebidas quentes",retorno: 0,)));
                     },
                     child:  Image.asset(
                       "assets/images/cafe.jpg",
@@ -217,7 +238,7 @@ class Inicio extends StatelessWidget {
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Cupcakes",)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Cupcakes",retorno: 0,)));
                     },
                     child:  Image.asset(
                       "assets/images/cupcake.jpg",
@@ -237,7 +258,7 @@ class Inicio extends StatelessWidget {
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Biscoitos",)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Biscoitos e bolachas",retorno: 0,)));
                     },
                     child:  Image.asset(
                       "assets/images/donuts.jpg",
@@ -252,7 +273,7 @@ class Inicio extends StatelessWidget {
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Bebidas",)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Bebidas geladas",retorno: 0,)));
                     },
                     child:  Image.asset(
                       "assets/images/drinks.jpg",
@@ -272,7 +293,7 @@ class Inicio extends StatelessWidget {
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Fitness",)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Comida fitness",retorno: 0,)));
                     },
                     child:  Image.asset(
                       "assets/images/fitness.jpg",
@@ -287,7 +308,7 @@ class Inicio extends StatelessWidget {
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Sorvetes",)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Sorvetes",retorno: 0,)));
                     },
                     child:  Image.asset(
                       "assets/images/sorvete.jpg",

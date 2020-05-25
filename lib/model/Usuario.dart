@@ -1,36 +1,18 @@
-
-
-import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
-
-final notesReference = FirebaseDatabase.instance.reference().child('usuario');
-
-class _ListViewNoteState extends State<ListViewNote> {
-  List<Usuario> items;
-  StreamSubscription<Event> _onNoteAddedSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-    items = new List();
-    _onNoteAddedSubscription = notesReference.onChildAdded.listen(_onNoteAdded);
-  }
-
-  @override
-  void dispose() {
-    _onNoteAddedSubscription.cancel();
-    super.dispose();
-  }
-
-  void _onNoteAdded(Event event) {
-    setState(() {
-      items.add(new Note.fromSnapshot(event.snapshot));
-    });
-  }
+import 'package:cloud_firestore/cloud_firestore.dart';
+class Usuario{
+  final id;
+  final email;
+  final nome;
+  final foto;
+  Usuario({this.email, this.nome, this.foto, this.id});
+  factory Usuario.fromJson(Map<String, dynamic> json)=> Usuario(
+    email: json['email'],
+    nome: json['nome'],
+    foto: json['foto'],
+  );
 }
-
-
-
-class Usuario {
-
+Future<Usuario> getUsuario(email) async{
+  return await Firestore.instance.collection("usuarios").document(email).get().then((DocumentSnapshot ds){
+    return Usuario.fromJson(ds.data);
+  });
 }

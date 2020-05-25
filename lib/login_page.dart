@@ -1,13 +1,11 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mestrecucapp/HomePage.dart';
-import 'package:mestrecucapp/RegisterPage.dart';
+import 'package:mestrecucapp/home_page.dart';
+import 'package:mestrecucapp/register_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:mestrecucapp/model/usuario.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 class LoginPage extends StatefulWidget {
 
@@ -17,29 +15,49 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TextStyle style = TextStyle(fontSize: 20, color: Colors.white);
-  //String _usuario="";
-  //String _senha="";
   final frmLoginKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final databaseReference = Firestore.instance;
+
   bool _success;
   String _userEmail;
-  String _userID;
   void _signInWithEmailAndPassword() async{
     final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
     email: _emailController.text,
     password: _passwordController.text,
     )).user;
     if (user != null) {
+      Usuario info_usuario = await getUsuario(_emailController.text);
+      print(info_usuario.nome);
       setState(() {
         _success = true;
         _userEmail = user.email;
       });
-      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage(user: user)));
-    } else {
-    _success = false;
+      Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context)=>HomePage(user: info_usuario)), ModalRoute.withName('/HomePage'));
+    }else {
+      _success = false;
+      Error();
     }
   }
+  void Error(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text("Erro"),
+            content: Text("Usuário e/ou senha incorretos!"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Ok"),
+                onPressed: ()=>Navigator.pop(context),
+              )
+            ],
+          );
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final usuarioField= TextFormField(
@@ -48,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
       controller: _emailController,
       validator: (String value) {
         if (value.isEmpty) {
-          return 'Infomre um email  válido';
+          return 'Informe um email  válido';
         }
         return null;
       },
@@ -111,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           RaisedButton(
                             padding: EdgeInsets.all(20),
-                            color: Colors.lightBlue,
+                            color: Colors.pinkAccent,
                             child: Container(
                               width: MediaQuery.of(context).size.width*.85,
                               child: Text('LOGIN', style: TextStyle(color: Colors.white), textAlign: TextAlign.center,),
@@ -119,30 +137,22 @@ class _LoginPageState extends State<LoginPage> {
                             focusColor: Color(0xFFCF9F77),
                             shape: RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0),
-                                side: BorderSide(color: Colors.blue)
+                                side: BorderSide(color: Colors.pink)
                             ),
                             elevation: 7.0,
                             onPressed: () async{
                               if (frmLoginKey.currentState.validate()) {
                                 _signInWithEmailAndPassword();
                               }
+                              if(!_success){
+                                Error();
+                              }
                             },
                           ),
                           SizedBox(
                             height: 15,
                           ),
-                          Container(
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              _success == null
-                                  ? ''
-                                  : (_success
-                                  ? 'Successfully signed in ' + _userEmail
-                                  : 'Sign in failed'),
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
+
                           SizedBox(
                             height: 15,
                           ),
