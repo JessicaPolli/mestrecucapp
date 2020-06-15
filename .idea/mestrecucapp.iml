@@ -6,6 +6,12 @@
       <excludeFolder url="file://$MODULE_DIR$/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/flutter_app2/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/flutter_app2/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/flutter_app2/build" />
+      <excludeFolder url="file://$MODULE_DIR$/flutter_appdois/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/flutter_appdois/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/flutter_appdois/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

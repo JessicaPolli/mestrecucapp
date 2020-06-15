@@ -16,23 +16,23 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
+
 class _HomePageState extends State<HomePage> {
 
   String title = 'Mestre Cuca App';
   int _selectedIndex = 0;
-  List<Widget> _widgetOptions = <Widget>[
-    Inicio(),
-    listaReceitas(lista: "Recentes",),
-    listaReceitas(lista: "Favoritos",),
-    listaReceitas(lista: "Minhas receitas",),
-  ];
+
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     var byte = null;
@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                   backgroundImage:byte==null?AssetImage('assets/images/usuario.jpg'):MemoryImage(byte),
                 ),
               ),
-              ListTile(
+              /*ListTile(
                   title: Text('Perfil'),
                   leading: Icon(Icons.person_pin),
                   trailing: Icon(Icons.navigate_next),
@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                   onTap: () {
                     debugPrint('Clicou no menu 2');
                   }
-               ),
+              ),*/
               ListTile(
                 title: Text("Sair"),
                 leading: Icon(Icons.exit_to_app),
@@ -86,14 +86,19 @@ class _HomePageState extends State<HomePage> {
             ],
           )
       ),
-      body:_widgetOptions.elementAt(_selectedIndex),
+      body:<Widget>[
+        Inicio( ),
+        listaReceitas(lista: "Recentes"),
+        //listaReceitas(lista: "Favoritos"),
+        listaReceitas(lista: "Minhas receitas", autor: widget.user.nome,),
+      ].elementAt(_selectedIndex),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add, color: Colors.white,),
         onPressed: (){
           print( DateTime.now());
           Navigator.push(context, MaterialPageRoute(builder: (context)=> NovaReceita(user: widget.user,)));
         },
-        backgroundColor: Colors.pinkAccent,
+        backgroundColor: Color(0xFFCF9F77),
       ),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -103,7 +108,7 @@ class _HomePageState extends State<HomePage> {
               switch(_selectedIndex){
                 case 0: title='Mestre Cuca App'; break;
                 case 1: title='Recentes'; break;
-                case 2: title='Favoritos'; break;
+                //case 2: title='Favoritos'; break;
                 case 3: title='Minhas receitas'; break;
               }
             });
@@ -117,13 +122,13 @@ class _HomePageState extends State<HomePage> {
                 title: Text('Início')
             ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.access_time),
-                title: Text('Recentes'),
+              icon: Icon(Icons.access_time),
+              title: Text('Recentes'),
             ),
-            BottomNavigationBarItem(
+            /*BottomNavigationBarItem(
                 icon: Icon(Icons.favorite_border,),
                 title: Text('Favoritas', )
-            ),
+            ),*/
             BottomNavigationBarItem(
               icon: Icon(Icons.restaurant),
               title: Text('Receitas'),
@@ -135,6 +140,8 @@ class _HomePageState extends State<HomePage> {
   }
 }
 class Inicio extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -161,19 +168,19 @@ class Inicio extends StatelessWidget {
                   )
               ),
               Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                margin: EdgeInsets.only(left: 6, right: 3),
-                width: MediaQuery.of(context).size.width*.47,
-                child:InkWell(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Sobremesas",retorno: 0,)));
-                  },
-                  child:  Image.asset(
-                    "assets/images/sobremesa.jpg",
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
                   ),
-                )
+                  margin: EdgeInsets.only(left: 6, right: 3),
+                  width: MediaQuery.of(context).size.width*.47,
+                  child:InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Sobremesas",retorno: 0,)));
+                    },
+                    child:  Image.asset(
+                      "assets/images/sobremesa.jpg",
+                    ),
+                  )
               ),
             ],
           ),
@@ -188,7 +195,7 @@ class Inicio extends StatelessWidget {
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Assados",retorno: 0,)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Assados",retorno: 0, )));
                     },
                     child:  Image.asset(
                       "assets/images/assados.jpg",
@@ -223,7 +230,7 @@ class Inicio extends StatelessWidget {
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Bebidas quentes",retorno: 0,)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Bebidas quentes",retorno: 0)));
                     },
                     child:  Image.asset(
                       "assets/images/cafe.jpg",
@@ -308,13 +315,14 @@ class Inicio extends StatelessWidget {
                   width: MediaQuery.of(context).size.width*.47,
                   child:InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Sorvetes",retorno: 0,)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> listaReceitas(lista:"Sorvetes",retorno: 0, )));
                     },
                     child:  Image.asset(
                       "assets/images/sorvete.jpg",
                     ),
                   )
               ),
+
             ],
           ),
 

@@ -13,7 +13,8 @@ dependencies:
   firebase_auth:
   cloud_firestore:
   image_picker:
-
+  grouped_buttons: ^1.0.4
+  date_format:
 
 dev_dependencies:
   flutter_test:

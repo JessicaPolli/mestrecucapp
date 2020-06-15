@@ -14,7 +14,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextStyle style = TextStyle(fontSize: 20, color: Colors.white);
+  TextStyle style = TextStyle(                                 fontSize: 20, color: Colors.white);
   final frmLoginKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -137,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                             focusColor: Color(0xFFCF9F77),
                             shape: RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0),
-                                side: BorderSide(color: Colors.pink)
+                                side: BorderSide(color: Color(0xFFCF9F77))
                             ),
                             elevation: 7.0,
                             onPressed: () async{
